@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RA-TechMed-DE.github.io</title>
+  <style>
+    :root {
+      --bg: #f3f5f7;
+      --panel: #ffffff;
+      --panel-alt: #f7f8fa;
+      --ink: #1d232b;
+      --muted: #5d6773;
+      --border: #dfe4ea;
+      --header: #20262d;
+      --header-soft: #2f3741;
+      --accent: #2c3e50;
+      --accent-strong: #1a232d;
+      --warning-bg: #fff6dc;
+      --warning-border: #d6a800;
+      --error: #a42929;
+      --success: #1f6f42;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--header);
+      color: white;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.14);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 16px 14px;
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: clamp(1.7rem, 2vw, 2.3rem);
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: #dfe5eb;
+      font-size: 0.98rem;
+    }
+
+    nav {
+      max-width: 1100px;
+      margin: 14px auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 16px 16px;
+    }
+
+    nav a {
+      text-decoration: none;
+      background: var(--header-soft);
+      color: white;
+      padding: 9px 12px;
+      border-radius: 7px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    nav a:hover {
+      background: #3a4551;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 0 16px 24px;
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(24, 30, 36, 0.03);
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.5rem, 2vw, 2.1rem);
+      color: var(--ink);
+    }
+
+    h3 {
+      margin: 16px 0 10px;
+      font-size: 1.12rem;
+      color: var(--ink);
+    }
+
+    p {
+      margin: 10px 0;
+      color: var(--ink);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .card {
+      background: var(--panel-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    .formula {
+      background: #eef2f5;
+      border: 1px solid #dce2ea;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: "Courier New", monospace;
+      font-weight: 700;
+      line-height: 1.7;
+      margin: 12px 0;
+      white-space: pre-line;
+    }
+
+    .warning {
+      background: var(--warning-bg);
+      border-left: 4px solid var(--warning-border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 18px;
+      color: #3b2d00;
+    }
+
+    label {
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 7px;
+      font-weight: bold;
+      color: var(--ink);
+    }
+
+    input, select, button {
+      font: inherit;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid #b8c0c9;
+      background: white;
+      color: var(--ink);
+      padding: 11px 12px;
+      border-radius: 7px;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 16px;
+      width: 100%;
+      border: none;
+      background: var(--accent);
+      color: white;
+      padding: 12px 14px;
+      border-radius: 7px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: var(--accent-strong);
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 16px 14px;
+      background: #edf1f5;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      color: var(--ink);
+      min-height: 80px;
+    }
+
+    .result strong {
+      color: var(--ink);
+    }
+
+    .error {
+      color: var(--error);
+      font-weight: bold;
+    }
+
+    .success {
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    ul {
+      margin: 8px 0 0 20px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    footer {
+      text-align: center;
+      color: #596673;
+      padding: 18px 12px 36px;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 600px) {
+      section {
+        padding: 18px 14px;
+      }
+
+      nav {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      nav a {
+        font-size: 0.82rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1 class="page-title">RA-TechMed-DE.github.io</h1>
+      <p class="subtitle">Digital Electronics Test Helper</p>
+    </div>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#rc">RC Time Constant</a>
+      <a href="#timer555">555 Timer</a>
+      <a href="#binary">Binary</a>
+      <a href="#bases">Octal / Hex</a>
+      <a href="#units">Unit Converter</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home">
+      <h2>Digital Electronics Test Helper</h2>
+      <p>
+        Enter the numbers from your practice problem using the units shown. The calculator will automatically calculate the answer.
+      </p>
+
+      <div class="card-grid">
+        <div class="card">
+          <h3>RC Time Constant</h3>
+          <p>Calculate time constant, charge percentage, and basic RC behavior.</p>
+        </div>
+        <div class="card">
+          <h3>555 Timer</h3>
+          <p>Find period, frequency, duty cycle, and required resistor values.</p>
+        </div>
+        <div class="card">
+          <h3>Binary</h3>
+          <p>Convert decimal to binary and binary to decimal quickly.</p>
+        </div>
+        <div class="card">
+          <h3>Octal / Hex</h3>
+          <p>Convert between binary, octal, decimal, and hexadecimal.</p>
+        </div>
+        <div class="card">
+          <h3>Unit Converter</h3>
+          <p>Convert voltage, current, resistance, capacitance, and other common units.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="rc">
+      <h2>RC Time Constant</h2>
+      <p>The time constant tells you how quickly a capacitor charges or discharges through a resistor.</p>
+      <div class="formula">τ = R × C</div>
+      <p>Use resistance in ohms and capacitance in microfarads. The calculator converts microfarads to farads automatically.</p>
+
+      <div class="card">
+        <label for="rcResistance">Resistance (Ω)</label>
+        <input id="rcResistance" type="number" step="any" placeholder="Example: 100" />
+
+        <label for="rcCapacitance">Capacitance (µF)</label>
+        <input id="rcCapacitance" type="number" step="any" placeholder="Example: 200" />
+
+        <button type="button" onclick="calculateRC()">Calculate</button>
+
+        <div id="rcResult" class="result">
+          Enter values to calculate the RC time constant.
+        </div>
+      </div>
+    </section>
+
+    <section id="timer555">
+      <h2>555 Timer</h2>
+      <p>The standard astable 555 timer uses the formulas below to calculate period, frequency, duty cycle, and tau.</p>
+
+      <div class="formula">T = 0.693(RA + 2RB)C
+F = 1 / T
+Duty Cycle = (RA + RB) / (RA + 2RB) × 100%
+τ = RB × C</div>
+
+      <h3>Calculate from RA, RB, and C</h3>
+      <div class="card">
+        <label for="ra">RA (kΩ)</label>
+        <input id="ra" type="number" step="any" placeholder="Example: 10" />
+
+        <label for="rb">RB (kΩ)</label>
+        <input id="rb" type="number" step="any" placeholder="Example: 20" />
+
+        <label for="timerC">C (µF)</label>
+        <input id="timerC" type="number" step="any" placeholder="Example: 0.01" />
+
+        <button type="button" onclick="calculate555()">Calculate 555</button>
+
+        <div id="timerResult" class="result">
+          Enter RA, RB, and C to calculate the timer values.
+        </div>
+      </div>
+
+      <h3>555 Solver</h3>
+      <p>Use this solver to find the required RA and RB for a target frequency and duty cycle.</p>
+      <div class="card">
+        <label for="targetFrequency">Target Frequency (Hz)</label>
+        <input id="targetFrequency" type="number" step="any" placeholder="Example: 2500" />
+
+        <label for="targetDuty">Target Duty Cycle (%)</label>
+        <input id="targetDuty" type="number" step="any" placeholder="Example: 60" />
+
+        <label for="solveC">C (µF)</label>
+        <input id="solveC" type="number" step="any" placeholder="Example: 0.01" />
+
+        <button type="button" onclick="solve555()">Solve RA and RB</button>
+
+        <div id="solve555Result" class="result">
+          Enter the target values to solve for RA and RB.
+        </div>
+      </div>
+    </section>
+
+    <section id="binary">
+      <h2>Binary Number System</h2>
+      <p>Binary uses only two digits: 0 and 1.</p>
+
+      <h3>Decimal → Binary</h3>
+      <div class="card">
+        <label for="decimalInput">Decimal number</label>
+        <input id="decimalInput" type="number" step="1" min="0" placeholder="Example: 43" />
+
+        <button type="button" onclick="decimalToBinary()">Convert to Binary</button>
+
+        <div id="decimalBinaryResult" class="result">
+          Enter a decimal number.
+        </div>
+      </div>
+
+      <h3>Binary → Decimal</h3>
+      <div class="card">
+        <label for="binaryInput">Binary number</label>
+        <input id="binaryInput" type="text" placeholder="Example: 101011" />
+
+        <button type="button" onclick="binaryToDecimal()">Convert to Decimal</button>
+
+        <div id="binaryDecimalResult" class="result">
+          Enter a binary number.
+        </div>
+      </div>
+
+      <div class="formula">Decimal-to-binary can be done by successive division by 2 and reading the remainders from bottom to top.</div>
+    </section>
+
+    <section id="bases">
+      <h2>Octal / Hexadecimal</h2>
+      <p>Convert between binary, octal, decimal, and hexadecimal.</p>
+
+      <div class="card">
+        <label for="baseInput">Number</label>
+        <input id="baseInput" type="text" placeholder="Example: 101011" />
+
+        <label for="fromBase">Convert From</label>
+        <select id="fromBase">
+          <option value="2">Binary (Base 2)</option>
+          <option value="8">Octal (Base 8)</option>
+          <option value="10">Decimal (Base 10)</option>
+          <option value="16">Hexadecimal (Base 16)</option>
+        </select>
+
+        <label for="toBase">Convert To</label>
+        <select id="toBase">
+          <option value="10">Decimal (Base 10)</option>
+          <option value="2">Binary (Base 2)</option>
+          <option value="8">Octal (Base 8)</option>
+          <option value="16">Hexadecimal (Base 16)</option>
+        </select>
+
+        <button type="button" onclick="convertBase()">Convert</button>
+
+        <div id="baseResult" class="result">
+          Enter a number and choose the bases.
+        </div>
+      </div>
+
+      <h3>Binary Shortcuts</h3>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Binary → Octal</h3>
+          <p>Group digits in sets of 3 from the right. Add leading zeros when needed.</p>
+        </div>
+        <div class="card">
+          <h3>Binary → Hexadecimal</h3>
+          <p>Group digits in sets of 4 from the right. Add leading zeros when needed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="units">
+      <h2>Unit Converter</h2>
+      <p>A separate general-purpose converter for common digital electronics and engineering units.</p>
+
+      <div class="card">
+        <label for="unitCategory">Category</label>
+        <select id="unitCategory" onchange="loadUnits()">
+          <option value="length">Length</option>
+          <option value="mass">Mass</option>
+          <option value="time">Time</option>
+          <option value="volume">Volume</option>
+          <option value="voltage">Voltage</option>
+          <option value="current">Current</option>
+          <option value="resistance">Resistance</option>
+          <option value="capacitance">Capacitance</option>
+        </select>
+
+        <label for="unitValue">Value</label>
+        <input id="unitValue" type="number" step="any" placeholder="Enter value" />
+
+        <label for="fromUnit">From</label>
+        <select id="fromUnit"></select>
+
+        <label for="toUnit">To</label>
+        <select id="toUnit"></select>
+
+        <button type="button" onclick="convertUnit()">Convert</button>
+
+        <div id="unitResult" class="result">
+          Enter a value and choose the units.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    RA-TechMed-DE.github.io<br />
+    Digital Electronics Test Helper
+  </footer>
+
+  <script>
+    function safeNumber(value) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : null;
+    }
+
+    function formatNumber(value) {
+      if (typeof value === 'bigint') return value.toString();
+
+      const num = Number(value);
+      if (!Number.isFinite(num)) return 'Invalid';
+      if (num === 0) return '0';
+
+      const abs = Math.abs(num);
+      if (abs >= 1000000 || abs < 0.000001) {
+        return num.toExponential(6);
+      }
+
+      return Number(num.toFixed(8)).toString();
+    }
+
+    function calculateRC() {
+      const R = safeNumber(document.getElementById('rcResistance').value);
+      const Cmicro = safeNumber(document.getElementById('rcCapacitance').value);
+      const output = document.getElementById('rcResult');
+
+      if (R === null || Cmicro === null) {
+        output.innerHTML = '<span class="error">Please enter both values.</span>';
+        return;
+      }
+
+      if (R < 0 || Cmicro < 0) {
+        output.innerHTML = '<span class="error">Please enter valid positive values.</span>';
+        return;
+      }
+
+      const C = Cmicro * 1e-6;
+      const tau = R * C;
+      const charge = [
+        { label: '1τ', value: 63.2 },
+        { label: '2τ', value: 86.5 },
+        { label: '3τ', value: 95.0 },
+        { label: '4τ', value: 98.2 },
+        { label: '5τ', value: 99.3 }
+      ];
+
+      output.innerHTML = `
+        <strong>RESULT</strong><br />
+        <strong>Time Constant:</strong><br />
+        τ = ${formatNumber(tau)} s<br />
+        τ = ${formatNumber(tau * 1000)} ms<br /><br />
+        <strong>Approximate capacitor charge:</strong>
+        <ul>
+          ${charge.map(item => `<li>${item.label} → ${item.value}%</li>`).join('')}
+        </ul>
+      `;
+    }
+
+    function calculate555() {
+      const RA_k = safeNumber(document.getElementById('ra').value);
+      const RB_k = safeNumber(document.getElementById('rb').value);
+      const C_micro = safeNumber(document.getElementById('timerC').value);
+      const output = document.getElementById('timerResult');
+
+      if (RA_k === null || RB_k === null || C_micro === null) {
+        output.innerHTML = '<span class="error">Please enter all three values.</span>';
+        return;
+      }
+
+      if (RA_k < 0 || RB_k < 0 || C_micro <= 0) {
+        output.innerHTML = '<span class="error">Please enter valid positive values.</span>';
+        return;
+      }
+
+      const RA = RA_k * 1000;
+      const RB = RB_k * 1000;
+      const C = C_micro * 1e-6;
+      const T = 0.693 * (RA + 2 * RB) * C;
+      const F = 1 / T;
+      const duty = ((RA + RB) / (RA + 2 * RB)) * 100;
+      const tau = RB * C;
+
+      output.innerHTML = `
+        <strong>RESULT</strong><br /><br />
+        <strong>Period T:</strong> ${formatNumber(T)} s<br />
+        <strong>Period T:</strong> ${formatNumber(T * 1000)} ms<br /><br />
+        <strong>Frequency F:</strong> ${formatNumber(F)} Hz<br /><br />
+        <strong>Duty Cycle:</strong> ${formatNumber(duty)}%<br /><br />
+        <strong>τ = RB × C:</strong> ${formatNumber(tau)} s
+      `;
+    }
+
+    function solve555() {
+      const F = safeNumber(document.getElementById('targetFrequency').value);
+      const D = safeNumber(document.getElementById('targetDuty').value);
+      const Cmicro = safeNumber(document.getElementById('solveC').value);
+      const output = document.getElementById('solve555Result');
+
+      if (F === null || D === null || Cmicro === null) {
+        output.innerHTML = '<span class="error">Please enter all values.</span>';
+        return;
+      }
+
+      if (F <= 0 || Cmicro <= 0 || D <= 0 || D >= 100) {
+        output.innerHTML = '<span class="error">Use positive values and a duty cycle between 0% and 100%.</span>';
+        return;
+      }
+
+      const C = Cmicro * 1e-6;
+      const dutyDecimal = D / 100;
+      const total = 1 / (F * 0.693 * C);
+      const RB = total * (1 - dutyDecimal);
+      const RA = total * (2 * dutyDecimal - 1);
+
+      if (RA <= 0 || RB <= 0) {
+        output.innerHTML = `
+          <span class="error">
+            This frequency and duty cycle combination cannot produce positive RA and RB using the standard astable 555 timer equations.
+            For positive resistor values, the duty cycle must be greater than 50%.
+          </span>
+        `;
+        return;
+      }
+
+      output.innerHTML = `
+        <strong>RESULT</strong><br /><br />
+        <strong>RA:</strong> ${formatNumber(RA / 1000)} kΩ<br /><br />
+        <strong>RB:</strong> ${formatNumber(RB / 1000)} kΩ
+      `;
+    }
+
+    function decimalToBinary() {
+      const input = document.getElementById('decimalInput').value;
+      const output = document.getElementById('decimalBinaryResult');
+
+      if (input === '') {
+        output.innerHTML = '<span class="error">Please enter a value.</span>';
+        return;
+      }
+
+      const number = Number(input);
+      if (!Number.isInteger(number) || number < 0) {
+        output.innerHTML = '<span class="error">Enter a non-negative whole number.</span>';
+        return;
+      }
+
+      const binary = Number(number).toString(2);
+      output.innerHTML = `
+        <strong>${formatNumber(number)}</strong> in decimal = <strong>${binary}</strong> in binary
+      `;
+    }
+
+    function binaryToDecimal() {
+      const input = document.getElementById('binaryInput').value.trim();
+      const output = document.getElementById('binaryDecimalResult');
+
+      if (input === '') {
+        output.innerHTML = '<span class="error">Please enter a value.</span>';
+        return;
+      }
+
+      if (!/^[01]+$/.test(input)) {
+        output.innerHTML = '<span class="error">Binary numbers can only contain 0 and 1.</span>';
+        return;
+      }
+
+      const decimal = BigInt('0b' + input).toString(10);
+      output.innerHTML = `
+        <strong>${input}</strong> in binary = <strong>${decimal}</strong> in decimal
+      `;
+    }
+
+    function fromBaseToDecimal(value, base) {
+      let total = 0n;
+      const digits = { '0': 0n, '1': 1n, '2': 2n, '3': 3n, '4': 4n, '5': 5n, '6': 6n, '7': 7n, '8': 8n, '9': 9n, 'A': 10n, 'B': 11n, 'C': 12n, 'D': 13n, 'E': 14n, 'F': 15n };
+
+      for (const ch of value.toUpperCase()) {
+        if (!(ch in digits)) {
+          return null;
+        }
+        total = total * BigInt(base) + digits[ch];
+      }
+
+      return total;
+    }
+
+    function baseToString(value, base) {
+      const letters = '0123456789ABCDEF';
+      let result = value.toString(base).toUpperCase();
+      if (base === 16) {
+        result = result.toUpperCase();
+      }
+      return result;
+    }
+
+    function convertBase() {
+      const inputRaw = document.getElementById('baseInput').value.trim();
+      const from = Number(document.getElementById('fromBase').value);
+      const to = Number(document.getElementById('toBase').value);
+      const output = document.getElementById('baseResult');
+
+      if (inputRaw === '') {
+        output.innerHTML = '<span class="error">Please enter a value.</span>';
+        return;
+      }
+
+      const input = inputRaw.toUpperCase();
+      const allowed = {
+        2: /^[01]+$/,
+        8: /^[0-7]+$/,
+        10: /^[0-9]+$/,
+        16: /^[0-9A-F]+$/
+      };
+
+      if (!allowed[from].test(input)) {
+        const labels = { 2: 'Binary', 8: 'Octal', 10: 'Decimal', 16: 'Hexadecimal' };
+        output.innerHTML = `<span class="error">${labels[from]} numbers can only contain valid digits for that base.</span>`;
+        return;
+      }
+
+      const decimalValue = fromBaseToDecimal(input, from);
+      if (decimalValue === null) {
+        output.innerHTML = '<span class="error">Please enter a valid number for the selected base.</span>';
+        return;
+      }
+
+      const result = decimalValue.toString(to).toUpperCase();
+      output.innerHTML = `
+        <strong>${input}</strong> (Base ${from}) = <strong>${result}</strong> (Base ${to})
+      `;
+    }
+
+    const unitData = {
+      length: {
+        mm: 0.001,
+        cm: 0.01,
+        m: 1,
+        km: 1000,
+        inch: 0.0254,
+        foot: 0.3048,
+        yard: 0.9144,
+        mile: 1609.344
+      },
+      mass: {
+        mg: 0.000001,
+        g: 0.001,
+        kg: 1,
+        ounce: 0.028349523125,
+        pound: 0.45359237
+      },
+      time: {
+        ms: 0.001,
+        s: 1,
+        minute: 60,
+        hour: 3600,
+        day: 86400
+      },
+      volume: {
+        mL: 0.000001,
+        L: 0.001,
+        'cubic meter': 1,
+        'US gallon': 0.003785411784,
+        'US cup': 0.0002365882365
+      },
+      voltage: {
+        'µV': 0.000001,
+        'mV': 0.001,
+        V: 1,
+        kV: 1000
+      },
+      current: {
+        'µA': 0.000001,
+        'mA': 0.001,
+        A: 1,
+        kA: 1000
+      },
+      resistance: {
+        'Ω': 1,
+        'kΩ': 1000,
+        'MΩ': 1000000
+      },
+      capacitance: {
+        F: 1,
+        'µF': 0.000001,
+        'nF': 0.000000001,
+        'pF': 0.000000000001
+      }
+    };
+
+    function getUnitLabels(category) {
+      const units = unitData[category];
+      return Object.keys(units);
+    }
+
+    function loadUnits() {
+      const category = document.getElementById('unitCategory').value;
+      const fromSelect = document.getElementById('fromUnit');
+      const toSelect = document.getElementById('toUnit');
+      const labels = getUnitLabels(category);
+
+      fromSelect.innerHTML = '';
+      toSelect.innerHTML = '';
+
+      labels.forEach(label => {
+        const fromOption = document.createElement('option');
+        fromOption.value = label;
+        fromOption.textContent = label;
+        fromSelect.appendChild(fromOption);
+
+        const toOption = document.createElement('option');
+        toOption.value = label;
+        toOption.textContent = label;
+        toSelect.appendChild(toOption);
+      });
+
+      if (labels.length > 1) {
+        toSelect.selectedIndex = 1;
+      }
+
+      document.getElementById('unitResult').innerHTML = 'Enter a value and choose the units.';
+    }
+
+    function convertUnit() {
+      const value = safeNumber(document.getElementById('unitValue').value);
+      const category = document.getElementById('unitCategory').value;
+      const from = document.getElementById('fromUnit').value;
+      const to = document.getElementById('toUnit').value;
+      const output = document.getElementById('unitResult');
+
+      if (value === null) {
+        output.innerHTML = '<span class="error">Please enter a value.</span>';
+        return;
+      }
+
+      const units = unitData[category];
+      if (!units || !units[from] || !units[to]) {
+        output.innerHTML = '<span class="error">Please choose valid units.</span>';
+        return;
+      }
+
+      const baseValue = value * units[from];
+      const converted = baseValue / units[to];
+      output.innerHTML = `
+        <strong>${formatNumber(value)}</strong> ${from} = <strong>${formatNumber(converted)}</strong> ${to}
+      `;
+    }
+
+    document.getElementById('rcResistance').addEventListener('input', calculateRC);
+    document.getElementById('rcCapacitance').addEventListener('input', calculateRC);
+    document.getElementById('ra').addEventListener('input', calculate555);
+    document.getElementById('rb').addEventListener('input', calculate555);
+    document.getElementById('timerC').addEventListener('input', calculate555);
+    document.getElementById('targetFrequency').addEventListener('input', solve555);
+    document.getElementById('targetDuty').addEventListener('input', solve555);
+    document.getElementById('solveC').addEventListener('input', solve555);
+    document.getElementById('decimalInput').addEventListener('input', decimalToBinary);
+    document.getElementById('binaryInput').addEventListener('input', binaryToDecimal);
+    document.getElementById('baseInput').addEventListener('input', convertBase);
+    document.getElementById('fromBase').addEventListener('change', convertBase);
+    document.getElementById('toBase').addEventListener('change', convertBase);
+    document.getElementById('unitValue').addEventListener('input', convertUnit);
+    document.getElementById('fromUnit').addEventListener('change', convertUnit);
+    document.getElementById('toUnit').addEventListener('change', convertUnit);
+
+    loadUnits();
+  </script>
+</body>
+</html>
