@@ -233,6 +233,113 @@
       margin: 6px 0;
     }
 
+    .worksheet-info {
+      background: var(--panel-alt);
+      border-left: 4px solid var(--accent);
+      padding: 14px;
+      margin: 15px 0 20px;
+    }
+
+    .binary-place-values {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      max-width: 700px;
+      margin: 20px auto;
+      border: 2px solid var(--ink);
+    }
+
+    .binary-place-values div {
+      text-align: center;
+      padding: 12px;
+      border-right: 1px solid var(--border);
+    }
+
+    .binary-place-values div:last-child {
+      border-right: none;
+    }
+
+    .binary-place-values strong,
+    .binary-place-values span {
+      display: block;
+    }
+
+    .binary-place-values span {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .worksheet-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .worksheet-table {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background: var(--panel);
+    }
+
+    .worksheet-table th,
+    .worksheet-table td {
+      border: 1px solid var(--border);
+      text-align: center;
+      padding: 11px;
+    }
+
+    .worksheet-table th {
+      background: var(--panel-alt);
+    }
+
+    .worksheet-table td:first-child,
+    .worksheet-table .binary-digit,
+    .worksheet-table .full-binary {
+      font-weight: 700;
+    }
+
+    .worksheet-table .binary-digit,
+    .worksheet-table .full-binary {
+      font-family: "Courier New", monospace;
+      font-size: 1.15rem;
+    }
+
+    .worksheet-table .full-binary {
+      letter-spacing: 0.25em;
+    }
+
+    .worksheet-table tr.selected-row {
+      background: var(--warning-bg);
+    }
+
+    .worksheet-calculator {
+      max-width: 700px;
+      margin: 25px auto 0;
+      padding: 20px;
+      border: 1px solid var(--border);
+      background: var(--panel-alt);
+    }
+
+    .worksheet-calculator h3 {
+      margin-top: 0;
+    }
+
+    .worksheet-answer {
+      margin-top: 15px;
+      padding: 16px;
+      background: #edf1f5;
+      border-left: 4px solid var(--accent);
+      min-height: 60px;
+    }
+
+    .worksheet-tip {
+      max-width: 700px;
+      margin: 20px auto 0;
+      padding: 16px;
+      background: var(--panel-alt);
+      border: 1px solid var(--border);
+    }
+
     footer {
       text-align: center;
       color: #596673;
@@ -267,6 +374,7 @@
       <a href="#rc">RC Time Constant</a>
       <a href="#timer555">555 Timer</a>
       <a href="#binary">Binary</a>
+      <a href="#worksheet-helper">4-Bit Worksheet</a>
       <a href="#bases">Octal / Hex</a>
       <a href="#units">Unit Converter</a>
     </nav>
@@ -400,6 +508,50 @@ Duty Cycle = (RA + RB) / (RA + 2RB) × 100%
       </div>
 
       <div class="formula">Decimal-to-binary can be done by successive division by 2 and reading the remainders from bottom to top.</div>
+    </section>
+
+    <section id="worksheet-helper" class="worksheet-section">
+      <h2>4-Bit Decimal → Binary Worksheet Helper</h2>
+      <p>Use this table to fill in a 4-bit decimal-to-binary worksheet. Find the decimal number in the Count column, then copy its four binary digits from left to right.</p>
+
+      <div class="worksheet-info">
+        <strong>How to use:</strong> Find the decimal number in the Count column, then copy the four binary digits from left to right into your worksheet.
+      </div>
+
+      <div class="binary-place-values" aria-label="Binary place values, most significant to least significant">
+        <div><strong>MSB</strong><span>8</span></div>
+        <div><strong>Bit</strong><span>4</span></div>
+        <div><strong>Bit</strong><span>2</span></div>
+        <div><strong>LSB</strong><span>1</span></div>
+      </div>
+
+      <div class="worksheet-table-wrapper">
+        <table class="worksheet-table">
+          <thead>
+            <tr>
+              <th scope="col">Count</th>
+              <th scope="col">MSB</th>
+              <th scope="col">Bit</th>
+              <th scope="col">Bit</th>
+              <th scope="col">LSB</th>
+              <th scope="col">Binary</th>
+            </tr>
+          </thead>
+          <tbody id="fourBitTable"></tbody>
+        </table>
+      </div>
+
+      <div class="worksheet-calculator">
+        <h3>Find a Specific Number</h3>
+        <label for="worksheetDecimal">Enter Count (0–15)</label>
+        <input id="worksheetDecimal" type="number" min="0" max="15" step="1" placeholder="Example: 7" />
+        <button type="button" onclick="findFourBitBinary()">Find Binary</button>
+        <div id="worksheetAnswer" class="worksheet-answer" aria-live="polite">Enter a number from 0–15.</div>
+      </div>
+
+      <div class="worksheet-tip">
+        <strong>Remember:</strong> The four columns represent <strong>8&nbsp;&nbsp;4&nbsp;&nbsp;2&nbsp;&nbsp;1</strong>. Turn a column on (1) when its value is needed to make the decimal number; otherwise, write 0.
+      </div>
     </section>
 
     <section id="bases">
@@ -833,6 +985,57 @@ Duty Cycle = (RA + RB) / (RA + 2RB) × 100%
       `;
     }
 
+    function createFourBitTable() {
+      const table = document.getElementById('fourBitTable');
+
+      for (let count = 0; count <= 15; count++) {
+        const binary = count.toString(2).padStart(4, '0');
+        const row = document.createElement('tr');
+        row.id = `worksheet-row-${count}`;
+
+        const countCell = document.createElement('td');
+        countCell.textContent = count;
+        row.appendChild(countCell);
+
+        for (const digit of binary) {
+          const bitCell = document.createElement('td');
+          bitCell.className = 'binary-digit';
+          bitCell.textContent = digit;
+          row.appendChild(bitCell);
+        }
+
+        const binaryCell = document.createElement('td');
+        binaryCell.className = 'full-binary';
+        binaryCell.textContent = binary;
+        row.appendChild(binaryCell);
+        table.appendChild(row);
+      }
+    }
+
+    function findFourBitBinary() {
+      const input = document.getElementById('worksheetDecimal').value;
+      const answer = document.getElementById('worksheetAnswer');
+      const number = Number(input);
+
+      if (input === '' || !Number.isInteger(number) || number < 0 || number > 15) {
+        answer.innerHTML = '<span class="error">Enter a whole number from 0 to 15.</span>';
+        return;
+      }
+
+      const binary = number.toString(2).padStart(4, '0');
+      document.querySelectorAll('#fourBitTable tr').forEach(row => {
+        row.classList.remove('selected-row');
+      });
+
+      document.getElementById(`worksheet-row-${number}`).classList.add('selected-row');
+      answer.innerHTML = `
+        <strong>Count ${number}</strong><br /><br />
+        MSB → LSB: <strong class="full-binary">${binary}</strong><br /><br />
+        Fill in your worksheet: <strong>${binary.split('').join('&nbsp;&nbsp;')}</strong><br /><br />
+        Place values: <strong>8&nbsp;&nbsp;4&nbsp;&nbsp;2&nbsp;&nbsp;1</strong>
+      `;
+    }
+
     document.getElementById('rcResistance').addEventListener('input', calculateRC);
     document.getElementById('rcCapacitance').addEventListener('input', calculateRC);
     document.getElementById('ra').addEventListener('input', calculate555);
@@ -851,6 +1054,7 @@ Duty Cycle = (RA + RB) / (RA + 2RB) × 100%
     document.getElementById('toUnit').addEventListener('change', convertUnit);
 
     loadUnits();
+    createFourBitTable();
   </script>
 </body>
 </html>
